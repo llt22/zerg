@@ -10,7 +10,7 @@ namespace app\api\controller\v1;
 
 
 use app\api\validate\controller\IDCollection;
-
+use app\api\model\Theme as ThemeModel;
 class Theme
 {
     /*
@@ -20,6 +20,7 @@ class Theme
     public function getSimpleList($ids)
     {
         (new IDCollection())->goCheck();
-        return 'success';
+        $themes = ThemeModel::getThemeByID($ids);
+        return json($themes);
     }
 }
