@@ -12,5 +12,6 @@
 use think\Route;
 
 //api/v1.Banner/getBanner 模块/控制器/方法
-Route::rule('api/v1/banner/:id/', 'api/v1.Banner/getBanner', 'GET');
-Route::rule('api/v1/theme/', 'api/v1.Theme/getSimpleList', 'GET');
+Route::rule('api/:version/banner/:id', 'api/:version.Banner/getBanner', 'GET');
+Route::rule('api/:version/theme', 'api/:version.Theme/getSimpleList', 'GET');
+Route::rule('api/:version/theme/:id', 'api/:version.Theme/getOneKindProducts', 'GET');

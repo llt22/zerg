@@ -11,6 +11,8 @@ namespace app\api\controller\v1;
 
 use app\api\validate\controller\IDCollection;
 use app\api\model\Theme as ThemeModel;
+use app\api\validate\controller\IDMustBePositiveInt;
+
 class Theme
 {
     /*
@@ -20,7 +22,14 @@ class Theme
     public function getSimpleList($ids)
     {
         (new IDCollection())->goCheck();
-        $themes = ThemeModel::getThemeByID($ids);
+        $themes = ThemeModel::getThemesByIDs($ids);
         return json($themes);
+    }
+
+    public function getOneKindProducts($id)
+    {
+        (new IDMustBePositiveInt())->goCheck();
+        $theme = ThemeModel::getOneKindProductsByID($id);
+        return json($theme);
     }
 }
