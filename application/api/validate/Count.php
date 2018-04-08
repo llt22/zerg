@@ -6,7 +6,7 @@
  * Time: 16:39
  */
 
-namespace app\api\validate\controller;
+namespace app\api\validate;
 
 
 class Count extends BaseValidate

@@ -6,7 +6,7 @@
  * Time: 19:01
  */
 
-namespace app\api\validate\controller;
+namespace app\api\validate;
 
 
 class IDCollection extends BaseValidate

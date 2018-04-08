@@ -6,7 +6,7 @@
  * Time: 12:16
  */
 
-namespace app\api\validate\controller;
+namespace app\api\validate;
 
 use app\lib\exception\ParameterException;
 use think\Request;

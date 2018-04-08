@@ -9,9 +9,9 @@
 namespace app\api\controller\v1;
 
 
-use app\api\validate\controller\Count;
+use app\api\validate\Count;
 use app\api\model\Product as ProductModel;
-use app\api\validate\controller\IDMustBePositiveInt;
+use app\api\validate\IDMustBePositiveInt;
 
 class Product
 {
