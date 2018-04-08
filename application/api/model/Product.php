@@ -20,7 +20,7 @@ class Product extends BaseModel
 
     public static function getMostRecentProducts($count){
         $products = self::limit($count)->order('create_time desc')->select();
-        if(!$products){
+        if($products->isEmpty()){
             throw new NoProductsException();
         }
         return $products;

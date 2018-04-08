@@ -14,10 +14,14 @@ use app\api\model\Product as ProductModel;
 
 class Product
 {
-    public function getMostRecentProducts($count=15)
+    public function getMostRecentProducts($count = 15)
     {
         (new Count())->goCheck();
         $products = ProductModel::getMostRecentProducts($count);
-        return json($products);
+//        // 临时隐藏字段
+//        $collection = collection($products);
+//        $products = $collection->hidden(['summary']);
+        $products = $products->hidden(['summary']);
+        return $products;
     }
 }
