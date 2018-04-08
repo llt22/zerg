@@ -15,3 +15,4 @@ use think\Route;
 Route::rule('api/:version/banner/:id', 'api/:version.Banner/getBanner', 'GET');
 Route::rule('api/:version/theme', 'api/:version.Theme/getSimpleList', 'GET');
 Route::rule('api/:version/theme/:id', 'api/:version.Theme/getOneKindProducts', 'GET');
+Route::rule('api/:version/products', 'api/:version.Product/getMostRecentProducts', 'GET');

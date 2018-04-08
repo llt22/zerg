@@ -8,6 +8,7 @@
 
 namespace app\api\model;
 
+use app\lib\exception\NoProductsException;
 
 class Product extends BaseModel
 {
@@ -15,5 +16,14 @@ class Product extends BaseModel
     public function getMainImgUrlAttr($value, $data)
     {
         return $this->addPrefixForImage($value, $data);
+    }
+
+    public static function getMostRecentProducts($count){
+        $products = self::limit($count)->order('create_time desc')->select();
+        if(!$products){
+            throw new NoProductsException();
+        }
+        return $products;
+
     }
 }
