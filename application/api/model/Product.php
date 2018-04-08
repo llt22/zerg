@@ -13,17 +13,30 @@ use app\lib\exception\NoProductsException;
 class Product extends BaseModel
 {
     protected $hidden = ['update_time', 'delete_time', 'create_time', 'pivot', 'from'];
+
     public function getMainImgUrlAttr($value, $data)
     {
         return $this->addPrefixForImage($value, $data);
     }
 
-    public static function getMostRecentProducts($count){
+    public static function getMostRecentProducts($count)
+    {
         $products = self::limit($count)->order('create_time desc')->select();
-        if($products->isEmpty()){
+        if ($products->isEmpty()) {
             throw new NoProductsException();
         }
         return $products;
+    }
 
+    public static function getProductsFromOneCategory($id)
+    {
+//        $products = Category::with('products')->find($id);
+
+        $products = self::where('category_id', '=', $id)->select();
+        if ($products->isEmpty()) {
+            throw new NoProductsException();
+        }
+        $products = $products->hidden(['summary']);
+        return $products;
     }
 }

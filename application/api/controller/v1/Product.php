@@ -11,6 +11,7 @@ namespace app\api\controller\v1;
 
 use app\api\validate\controller\Count;
 use app\api\model\Product as ProductModel;
+use app\api\validate\controller\IDMustBePositiveInt;
 
 class Product
 {
@@ -22,6 +23,11 @@ class Product
 //        $collection = collection($products);
 //        $products = $collection->hidden(['summary']);
         $products = $products->hidden(['summary']);
+        return $products;
+    }
+    public function getProductsFromOneCategory($id){
+        (new IDMustBePositiveInt())->goCheck();
+        $products = ProductModel::getProductsFromOneCategory($id);
         return $products;
     }
 }

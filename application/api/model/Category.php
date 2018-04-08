@@ -20,6 +20,11 @@ class Category extends BaseModel
         return $this->belongsTo('Image', 'topic_img_id', 'id');
     }
 
+//    public function products()
+//    {
+//        return $this->hasMany('product', 'category_id', 'id');
+//    }
+
     public static function getCategory(){
         $category = self::with('topicImg')->select();
         if($category->isEmpty()){

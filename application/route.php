@@ -17,3 +17,4 @@ Route::rule('api/:version/theme', 'api/:version.Theme/getSimpleList', 'GET');
 Route::rule('api/:version/theme/:id', 'api/:version.Theme/getOneKindProducts', 'GET');
 Route::rule('api/:version/products', 'api/:version.Product/getMostRecentProducts', 'GET');
 Route::rule('api/:version/category', 'api/:version.Category/getCategory', 'GET');
+Route::rule('api/:version/products_of_category', 'api/:version.Product/getProductsFromOneCategory', 'GET');
