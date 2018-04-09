@@ -19,4 +19,8 @@ Route::rule('api/:version/products', 'api/:version.Product/getMostRecentProducts
 Route::rule('api/:version/category', 'api/:version.Category/getCategory', 'GET');
 Route::rule('api/:version/products_of_category', 'api/:version.Product/getProductsFromOneCategory', 'GET');
 Route::rule('api/:version/token/user', 'api/:version.Token/getToken', 'POST');
-Route::rule('api/:version/product/:id', 'api/:version.Product/getOneProduct', 'get');
+// ['id'=>'\d+'] 只有id是数字的时候才匹配这个路由
+// 路由分组
+Route::group('api/:version/product', function () {
+    Route::get('/:id', 'api/:version.Product/getOneProduct', [], ['id' => '\d+']);
+});
