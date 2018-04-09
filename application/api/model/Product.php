@@ -39,4 +39,24 @@ class Product extends BaseModel
         $products = $products->hidden(['summary']);
         return $products;
     }
+
+    public static function getOneProduct($id)
+    {
+        $product = self::with('productImages,productImages.image,properties')->find($id);
+        if (!$product) {
+            throw new NoProductsException();
+        }
+        $products = $product->hidden(['summary']);
+        return $product;
+    }
+
+    public function productImages()
+    {
+        return $this->hasMany('productImage', 'product_id', 'id');
+    }
+
+    public function properties()
+    {
+        return $this->hasMany('ProductProperty', 'product_id', 'id');
+    }
 }

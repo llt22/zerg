@@ -30,4 +30,10 @@ class Product
         $products = ProductModel::getProductsFromOneCategory($id);
         return $products;
     }
+
+    public function getOneProduct($id){
+        (new IDMustBePositiveInt())->goCheck();
+        $product = ProductModel::getOneProduct($id);
+        return $product;
+    }
 }
