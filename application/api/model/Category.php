@@ -26,7 +26,7 @@ class Category extends BaseModel
 //    }
 
     public static function getCategory(){
-        $category = self::with('topicImg')->select();
+        $category = self::with('topicImg')->all();
         if($category->isEmpty()){
             throw new NoCategoryException();
         }

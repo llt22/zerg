@@ -24,3 +24,5 @@ Route::rule('api/:version/token/user', 'api/:version.Token/getToken', 'POST');
 Route::group('api/:version/product', function () {
     Route::get('/:id', 'api/:version.Product/getOneProduct', [], ['id' => '\d+']);
 });
+
+Route::rule('api/:version/address', 'api/:version.Address/createOrUpdateAddress', 'POST');
