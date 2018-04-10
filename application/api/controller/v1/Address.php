@@ -24,7 +24,7 @@ class Address
         // 根据Token来获取uid
         // 根据uid 来查找用户数据，判断用户是否存在，若果不存在抛出异常
         // 获取用户提交的地址信息
-        // 根据信息是否存在，来判断是添加还是更新
+        // 根据地址信息是否存在，来判断是添加还是更新
         $uid = TokenService::getCurrentUid();
         $user = UserModel::get($uid);
         if (!$user) {
