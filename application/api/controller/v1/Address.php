@@ -12,10 +12,15 @@ namespace app\api\controller\v1;
 use app\api\validate\AddressNew;
 use app\api\service\Token as TokenService;
 use app\api\model\User as UserModel;
+use app\lib\enum\ScopeEnum;
+use app\lib\exception\ForbiddenException;
 use app\lib\exception\SuccessMessage;
+use app\lib\exception\TokenException;
 use app\lib\exception\UserNotExistException;
+use think\Controller;
+use think\Exception;
 
-class Address
+class Address extends Controller
 {
     public function createOrUpdateAddress()
     {
@@ -40,6 +45,24 @@ class Address
         }
         // rest 要求修改或者添加数据成功后返回新的数据
         // 我们使用自定义的exception返回成功数据
-        return json(new SuccessMessage(),201);
+        return json(new SuccessMessage(), 201);
     }
+
+    protected $beforeActionList = [
+        // 在执行 createOrUpdateAddress 执行之前先执行 checkPermission
+        'checkPermission' => ['only' => 'createOrUpdateAddress']
+    ];
+
+    protected function checkPermission()
+    {
+        $scope = TokenService::getCurrentTokenVar('scope');
+        if(!$scope){
+            throw new TokenException();
+        }
+        if ($scope < ScopeEnum::User) {
+            throw new ForbiddenException();
+        }
+    }
+
+
 }

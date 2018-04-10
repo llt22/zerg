@@ -26,7 +26,7 @@ class Token
         return md5($randChars . $timeStamp . $salt);
     }
 
-    private static function getCurrentTokenVar($key)
+    public static function getCurrentTokenVar($key)
     {
         $token = Request::instance()->header('token');
         $vars = Cache::get($token);
