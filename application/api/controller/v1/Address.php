@@ -19,7 +19,8 @@ class Address
 {
     public function createOrUpdateAddress()
     {
-        (new AddressNew())->goCheck();
+        $validate = new AddressNew();
+        $validate->goCheck();
         // 根据Token来获取uid
         // 根据uid 来查找用户数据，判断用户是否存在，若果不存在抛出异常
         // 获取用户提交的地址信息
@@ -29,7 +30,7 @@ class Address
         if (!$user) {
             throw new UserNotExistException(['msg' => '此用户不存在']);
         }
-        $dataArray = getDatas();
+        $dataArray = $validate->getDataByRule(input('post.'));
         $userAddress = $user->address;
         if (!$userAddress) {
             $user->address()->save($dataArray);
@@ -39,6 +40,6 @@ class Address
         }
         // rest 要求修改或者添加数据成功后返回新的数据
         // 我们使用自定义的exception返回成功数据
-        return new SuccessMessage();
+        return json(new SuccessMessage(),201);
     }
 }

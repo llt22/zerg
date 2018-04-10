@@ -35,7 +35,7 @@ class Token
         } else {
             // redis返回的直接是数组，不用再转
             if (!is_array($vars)) {
-                $vars = json_encode($vars, true);
+                $vars = json_decode($vars, true);
             }
             if (array_key_exists($key, $vars)) {
                 return $vars[$key];
