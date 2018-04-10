@@ -42,7 +42,13 @@ class Product extends BaseModel
 
     public static function getOneProduct($id)
     {
-        $product = self::with('productImages,productImages.image,properties')->find($id);
+        $product = self::with(['productImages' => function ($query) {
+            $query->with(['imageUrl'])
+                ->order('order', 'asc');
+        }])
+            ->with(['properties'])
+            ->find($id);
+
         if (!$product) {
             throw new NoProductsException();
         }

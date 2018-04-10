@@ -11,7 +11,7 @@ namespace app\api\model;
 
 class ProductImage extends BaseModel
 {
-    public function image()
+    public function imageUrl()
     {
         return $this->belongsTo('Image', 'img_id', 'id');
     }
