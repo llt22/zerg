@@ -15,4 +15,9 @@ class User extends BaseModel
         $user = self::where('openid', '=', $openid)->find();
         return $user;
     }
+
+    public function address(){
+        // 一对一关系，从没有外键的查找有外键的用hasOne
+        return $this->hasOne('UserAddress', 'user_id', 'id');
+    }
 }
