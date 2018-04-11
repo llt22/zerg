@@ -8,8 +8,7 @@
 
 namespace app\api\controller\v1;
 
-
-class Order
+class Order extends BaseController
 {
     public function generateOrder()
     {
@@ -26,4 +25,8 @@ class Order
          * */
 
     }
+    protected $beforeActionList = [
+        // 在执行 generateOrder 执行之前先执行 checkExclusiveScope
+        'checkExclusiveScope' => ['only' => 'generateOrder']
+    ];
 }

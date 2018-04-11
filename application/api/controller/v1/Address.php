@@ -9,18 +9,13 @@
 namespace app\api\controller\v1;
 
 
-use app\api\validate\AddressNew;
-use app\api\service\Token as TokenService;
 use app\api\model\User as UserModel;
-use app\lib\enum\ScopeEnum;
-use app\lib\exception\ForbiddenException;
+use app\api\service\Token as TokenService;
+use app\api\validate\AddressNew;
 use app\lib\exception\SuccessMessage;
-use app\lib\exception\TokenException;
 use app\lib\exception\UserNotExistException;
-use think\Controller;
-use think\Exception;
 
-class Address extends Controller
+class Address extends BaseController
 {
     public function createOrUpdateAddress()
     {
@@ -50,19 +45,7 @@ class Address extends Controller
 
     protected $beforeActionList = [
         // 在执行 createOrUpdateAddress 执行之前先执行 checkPermission
-        'checkPermission' => ['only' => 'createOrUpdateAddress']
+        'checkPrimaryScope' => ['only' => 'createOrUpdateAddress']
     ];
-
-    protected function checkPermission()
-    {
-        $scope = TokenService::getCurrentTokenVar('scope');
-        if(!$scope){
-            throw new TokenException();
-        }
-        if ($scope < ScopeEnum::User) {
-            throw new ForbiddenException();
-        }
-    }
-
 
 }

@@ -13,7 +13,7 @@ use app\lib\exception\TokenException;
 use think\Cache;
 use think\Exception;
 use think\Request;
-
+use app\lib\enum\ScopeEnum;
 class Token
 {
     public static function generateToken()
@@ -47,7 +47,30 @@ class Token
 
     public static function getCurrentUid()
     {
-        $uid=self::getCurrentTokenVar('uid');
+        $uid = self::getCurrentTokenVar('uid');
         return $uid;
+    }
+
+    // 这两个方法我觉得放在BaseController里面更合适
+    public static function needPrimaryScope()
+    {
+        $scope = self::getCurrentTokenVar('scope');
+        if (!$scope) {
+            throw new TokenException();
+        }
+        if ($scope < ScopeEnum::User) {
+            throw new ForbiddenException();
+        }
+    }
+
+    public static function needExclusiveScope()
+    {
+        $scope = self::getCurrentTokenVar('scope');
+        if (!$scope) {
+            throw new TokenException();
+        }
+        if ($scope == ScopeEnum::User) {
+            throw new ForbiddenException();
+        }
     }
 }
