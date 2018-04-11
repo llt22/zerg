@@ -10,7 +10,7 @@ namespace app\api\controller\v1;
 
 class Order extends BaseController
 {
-    public function generateOrder()
+    public function placeOrder()
     {
         /*
          * 用户提交下单的数据
@@ -27,6 +27,6 @@ class Order extends BaseController
     }
     protected $beforeActionList = [
         // 在执行 generateOrder 执行之前先执行 checkExclusiveScope
-        'checkExclusiveScope' => ['only' => 'generateOrder']
+        'checkExclusiveScope' => ['only' => 'placeOrder']
     ];
 }
