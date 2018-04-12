@@ -8,12 +8,15 @@
 
 namespace app\api\controller\v1;
 
+use app\api\validate\OrderPlace;
+use app\api\service\Token as TokenService;
+
 class Order extends BaseController
 {
     public function placeOrder()
     {
         /*
-         * 用户提交下单的数据
+         * 验证用户提交下单的数据
          * 接收数据后，检查库存（因为许多人在下单）
          * 有库存，把订单数据存入数据库中。返回客户端消息，告诉客户端可以支付了
          * 调用支付接口，进行支付
@@ -23,6 +26,10 @@ class Order extends BaseController
          * 成功，再次进行库存的检查
          * 成功：进行库存量扣除，失败：返回一个支付失败的结果
          * */
+        (new OrderPlace())->goCheck();
+        $products = input('post.products/a');
+        $uid = TokenService::getCurrentUid();
+
 
     }
     protected $beforeActionList = [
