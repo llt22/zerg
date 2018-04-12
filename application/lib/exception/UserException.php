@@ -9,7 +9,7 @@
 namespace app\lib\exception;
 
 
-class UserNotExistException extends BaseException
+class UserException extends BaseException
 {
 
 }
