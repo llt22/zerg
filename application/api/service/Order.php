@@ -12,8 +12,8 @@ use app\api\model\OrderProduct;
 use app\api\model\Product;
 use app\api\model\UserAddress;
 use app\lib\exception\NoProductsException;
-use app\lib\exception\OrderException;
 use app\lib\exception\UserException;
+use think\Db;
 use think\Exception;
 
 class Order
@@ -72,6 +72,7 @@ class Order
 
     private function createOrder($snap)
     {
+        Db::startTrans();
         try {
             // 保存订单信息
             $orderNo = $this->makeOrderNo();
@@ -95,12 +96,15 @@ class Order
             }
             $orderProduct = new OrderProduct();
             $orderProduct->saveAll($this->oProducts);
+
+            Db::commit();
             return [
                 'order_no' => $orderNo,
                 'order_id' => $orderID,
                 'create_time' => $create_time
             ];
         } catch (Exception $ex) {
+            Db::rollback();
             throw $ex;
         }
 
