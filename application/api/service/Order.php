@@ -11,6 +11,7 @@ namespace app\api\service;
 use app\api\model\OrderProduct;
 use app\api\model\Product;
 use app\api\model\UserAddress;
+use app\lib\exception\NoProductsException;
 use app\lib\exception\OrderException;
 use app\lib\exception\UserException;
 use think\Exception;
@@ -39,10 +40,10 @@ class Order
         }
 
         // 生成订单快照
-        $orderSnap = $this->snapOrder();
-        $this->createOrder();
+        $orderSnap = $this->snapOrder($status);
+        $this->createOrder($orderSnap);
 
-
+        return json($status);
     }
 
     // 生成订单快照
@@ -71,7 +72,8 @@ class Order
 
     private function createOrder($snap)
     {
-        try{
+        try {
+            // 保存订单信息
             $orderNo = $this->makeOrderNo();
             $order = new \app\api\model\Order();
             $order->user_id = $this->uid;
@@ -84,6 +86,8 @@ class Order
             $order->snap_items = json_encode($snap['pStatus']);
             $order->save();
 
+
+            // 保存订单下面的商品信息
             $orderID = $order->id;
             $create_time = $order->create_time;
             foreach ($this->oProducts as &$p) {
@@ -96,7 +100,7 @@ class Order
                 'order_id' => $orderID,
                 'create_time' => $create_time
             ];
-        } catch (Exception $ex){
+        } catch (Exception $ex) {
             throw $ex;
         }
 
@@ -136,21 +140,32 @@ class Order
             'pStatusArray' => []
         ];
         foreach ($this->oProducts as $oProduct) {
-            $pStatus = $this->getProductStatus($oProduct['product_id'], $oProduct['count'], $this->products);
+            $pStatus = $this->getProductStatus($oProduct);
             if (!$pStatus['haveStock']) {
                 $status['pass'] = false;
             }
             $status['orderPrice'] += $pStatus['totalPrice'];
-            $status['totalCount'] += $pStatus['totalCount'];
+            $status['totalCount'] += $pStatus['count'];
             array_push($status['pStatusArray'], $pStatus);
         }
         return $status;
 
     }
 
-    private function getProductStatus($oPID, $oCount, $products)
+    private function getProductStatus($oProduct)
     {
-        $pIndex = 1;
+        $pID = $oProduct['product_id'];
+        $oCount = $oProduct['count'];
+        $product = null;
+        foreach ($this->products as $p) {
+            if ($p['id'] == $pID) {
+                $product = $p;
+            }
+        }
+        if (!$product) {
+            throw new NoProductsException();
+        }
+
         $pStatus = [
             'id' => null,
             'haveStock' => false,
@@ -158,29 +173,13 @@ class Order
             'name' => '',
             'totalPrice' => 0
         ];
-        for ($i = 0; $i < count($products); $i++) {
-            if ($oPID == $products[$i]['id']) {
-                $pIndex = $i;
-            }
+        if ($product['stock'] - $oCount >= 0) {
+            $pStatus['haveStock'] = true;
         }
-        if ($pIndex == -1) {
-            throw new OrderException([
-                'msg' => '商品不存在'
-            ]);
-        } else {
-            $product = $products[$pIndex];
-            if ($product['stock'] - $oCount >= 0) {
-                $pStatus['haveStock'] = true;
-            }
-            $pStatus = [
-                'id' => $pIndex,
-                'haveStock' => false,
-                'count' => $oCount,
-                'name' => $product['name'],
-                'totalPrice' => $product * $oCount,
-            ];
-        }
-
+        $pStatus['id'] = $product['id'];
+        $pStatus['count'] = $oCount;
+        $pStatus['name'] = $product['name'];
+        $pStatus['totalPrice'] = $product['price'] * $oCount;
         return $pStatus;
     }
 
@@ -191,12 +190,11 @@ class Order
 //        foreach ($oProducts as $oProduct) {
 //            // 循环查询数据库，应该避免
 //        }
-
-        $oPIDS = [];
+        $IDs = [];
         foreach ($oProducts as $oProduct) {
-            array_push($oPIDS, $oProduct['product_id']);
+            array_push($IDs, $oProduct['product_id']);
         }
-        $products = Product::all($oPIDS)
+        $products = Product::all($IDs)
             ->visible(['id', 'price', 'stock', 'name', 'main_img_url'])
             ->toArray();
         return $products;

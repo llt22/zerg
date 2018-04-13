@@ -10,10 +10,12 @@ namespace app\api\service;
 
 
 use app\lib\exception\TokenException;
+use app\lib\exception\ForbiddenException;
 use think\Cache;
 use think\Exception;
 use think\Request;
 use app\lib\enum\ScopeEnum;
+
 class Token
 {
     public static function generateToken()
@@ -55,6 +57,7 @@ class Token
     public static function needPrimaryScope()
     {
         $scope = self::getCurrentTokenVar('scope');
+        echo $scope;
         if (!$scope) {
             throw new TokenException();
         }
@@ -69,7 +72,7 @@ class Token
         if (!$scope) {
             throw new TokenException();
         }
-        if ($scope == ScopeEnum::User) {
+        if (!$scope == ScopeEnum::User) {
             throw new ForbiddenException();
         }
     }

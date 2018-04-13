@@ -27,3 +27,4 @@ Route::group('api/:version/product', function () {
 
 Route::rule('api/:version/address', 'api/:version.Address/createOrUpdateAddress', 'POST');
 Route::rule('api/:version/second', 'api/:version.Address/second', 'GET');
+Route::rule('api/:version/order', 'api/:version.Order/placeOrder', 'POST');

@@ -55,6 +55,7 @@ class BaseValidate extends Validate
         return true;
     }
 
+    // 过滤 post 提交的数据
     public function getDataByRule($array)
     {
         if (array_key_exists('user_id', $array) | array_key_exists('uid', $array)) {
